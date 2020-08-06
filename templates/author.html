@@ -1,0 +1,15 @@
+<div>
+    {% if not author %} 
+    The Author you are looking for does not exist 
+    {% else %}
+    <h2>{{author.name}}</h2>
+    <h4>{{author.bio}}</h4>
+    <ul>
+    {% for recipe in recipes %}
+        <li>
+            <p>{{recipe.title}}</p>
+        </li>
+    </ul>
+    {% endfor %}
+     {% endif%}
+  </div>
