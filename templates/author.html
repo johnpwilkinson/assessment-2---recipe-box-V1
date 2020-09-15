@@ -11,6 +11,16 @@
         </li>
     </ul>
     {% endfor %}
-     {% endif%}
-  </div>
-  <button onclick="window.location.href='/logout/'">Click Here to Log Out</button>
+    <h3><u>{{author.name}}'s Favorite Recipes</u></h3>
+    {% if favorites %}
+    <ul>
+        {% for favorite in favorites %}
+        <li><a href='/recipe/{{favorite.recipe.id}}'>{{favorite.recipe.title}}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h4>Doesn't look like {{author.name}} has any favorites yet.</h4>
+    {% endif %}
+    {% endif %}
+</div>
+<button onclick="window.location.href='/logout/'">Click Here to Log Out</button>

@@ -1,10 +1,11 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from recipes.models import Recipe, Author
+from recipes.models import Recipe, Author, Favorite
 from recipes.forms import AdminRecipeForm, AddAuthorForm, LoginForm, SignupForm, UserRecipeForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -19,11 +20,17 @@ def recipe(request, recipe_id):
     my_recipe = Recipe.objects.filter(id=recipe_id).first()
     return render(request, 'recipe.html', {'recipe': my_recipe})
 
+def fav_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    Favorite.objects.create(author=request.user.author, recipe=recipe)
+    return HttpResponseRedirect(reverse('homepage'))
+
 
 def author(request, author_id):
     my_author = Author.objects.filter(id=author_id).first()
     authors_recipes = Recipe.objects.filter(author=author_id)
-    return render(request, 'author.html', {'author': my_author, 'recipes': authors_recipes})
+    favorites = Favorite.objects.filter(author=author_id)
+    return render(request, 'author.html', {'author': my_author, 'recipes': authors_recipes, 'favorites': favorites})
 
 
 @login_required
@@ -58,7 +65,27 @@ def add_recipe(request):
         form = UserRecipeForm()
     return render(request, "generic_form.html", {'form': form})
 
-
+@login_required
+def edit_recipe_view(request, recipe_id):
+    edit_recipe = Recipe.objects.get(id=recipe_id)
+    if request.method == "POST":
+        form = UserRecipeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            edit_recipe.title = data['title']
+            edit_recipe.description = data['description']
+            edit_recipe.time_required = data['time_required']
+            edit_recipe.instructions = data['instructions']
+            edit_recipe.save()
+        return HttpResponseRedirect(reverse('homepage'))
+    data = {
+        'title': edit_recipe.title,
+        'description': edit_recipe.description,
+        'time_required': edit_recipe.time_required,
+        'instructions': edit_recipe.instructions
+    }
+    form = UserRecipeForm(initial=data)
+    return render(request, 'generic_form.html', {'form': form})
 
 @staff_member_required
 def add_author(request):

@@ -2,6 +2,7 @@
 {% for recipe in recipes %}
 <li>
     <a href='/recipe/{{recipe.id}}'>{{recipe}}</a>
+    <h3>Add {{recipe.title}} to favorites</h3>
 </li>
 {% endfor %}
 </ul>

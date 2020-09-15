@@ -22,4 +22,11 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+class Favorite(models.Model):
+    author = models.ForeignKey(Author, null=True, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self
     
