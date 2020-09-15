@@ -6,6 +6,17 @@
   <h4><a href='/author/{{recipe.author.id}}'>{{recipe.author}}</a></h4>
   <h5>{{recipe.description}}</h5>
   <p>{{recipe.instructions}}</p>
+  {% if request.user.is_staff %}
+    <h3> Hi staff <a href='/recipe/{{recipe.id}}/edit'>edit</a> this recipe?</h3>
+  {% endif %}
+  
+  {% if recipe.author == request.user %}
+    <h3> Need to <a href='/recipe/{{recipe.id}}/edit'>edit</a> your recipe?</h3>
+  {% endif %}
+  {% if request.user.is_active %}
+    <h4><a href='/favorite/{{recipe.id}}'>Add to my favorites</a></h4>
+  {% endif %}
+
 
   {% endif%}
 </div>
