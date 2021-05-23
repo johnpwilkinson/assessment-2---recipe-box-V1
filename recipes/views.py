@@ -10,7 +10,7 @@ def index(request):
 
 
 def recipe(request, recipe_id):
-    my_recipe = Recipe.objects.filter(id=recipe_id).first()
+    my_recipe = Recipe.objects.get(id=recipe_id)
     return render(request, 'recipe.html', {'recipe': my_recipe})
 
 
